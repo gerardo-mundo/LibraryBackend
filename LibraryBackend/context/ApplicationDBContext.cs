@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LibraryBackend.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryBackend.context
 {
@@ -13,7 +14,7 @@ namespace LibraryBackend.context
             base.OnModelCreating(modelBuilder);
         }
 
-       // public DbSet<Book> Books { get; set; }
+        public DbSet<Book> Books { get; set; } = null!;
 
     }
 }
