@@ -18,9 +18,9 @@ namespace LibraryBackend.Entities
         [Required,StringLength(20)]
         public string Publisher { get; set; } = null!;
         [Required, MaxLength(12)]
-        public byte ISBN { get; set; }
+        public long ISBN { get; set; }
         [Required, MaxLength(4)]
-        public byte Year { get; set; }
+        public int Year { get; set; }
         [Required, StringLength(20)]
         public string Collection { get; set; } = null!;
         [Required]

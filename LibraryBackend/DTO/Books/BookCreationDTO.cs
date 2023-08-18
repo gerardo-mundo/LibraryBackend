@@ -27,11 +27,11 @@ namespace LibraryBackend.DTO.Books
             ErrorMessage = "El campo editorial sólo puede tener un máximo de 20 caracteres")]
         public string Publisher { get; set; } = null!;
 
-        [Required(ErrorMessage = "El campo ISBN es requerido"), MaxLength(12, ErrorMessage = "No es un ISBN válido")]
-        public byte ISBN { get; set; }
+        [Required(ErrorMessage = "El campo ISBN es requerido")]
+        public long ISBN { get; set; }
 
-        [Required(ErrorMessage = "El campo año es requerido"), MaxLength(4, ErrorMessage ="No es un formato de fecha válido")]
-        public byte Year { get; set; }
+        [Required(ErrorMessage = "El campo año es requerido")]
+        public int Year { get; set; }
 
         [Required(ErrorMessage = "El campo colección es requerido"), StringLength(maximumLength: 20,
             ErrorMessage = "El campo colección sólo puede tener un máximo de 20 caracteres")]

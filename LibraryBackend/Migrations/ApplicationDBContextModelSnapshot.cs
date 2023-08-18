@@ -50,9 +50,9 @@ namespace LibraryBackend.Migrations
                     b.Property<byte>("Copies")
                         .HasColumnType("tinyint");
 
-                    b.Property<byte>("ISBN")
+                    b.Property<long>("ISBN")
                         .HasMaxLength(12)
-                        .HasColumnType("tinyint");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -69,9 +69,9 @@ namespace LibraryBackend.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
-                    b.Property<byte>("Year")
+                    b.Property<int>("Year")
                         .HasMaxLength(4)
-                        .HasColumnType("tinyint");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -4,7 +4,7 @@
 
 namespace LibraryBackend.Migrations
 {
-    public partial class BookMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,8 +20,8 @@ namespace LibraryBackend.Migrations
                     LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     AuthorMotherName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Publisher = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    ISBN = table.Column<byte>(type: "tinyint", maxLength: 12, nullable: false),
-                    Year = table.Column<byte>(type: "tinyint", maxLength: 4, nullable: false),
+                    ISBN = table.Column<long>(type: "bigint", maxLength: 12, nullable: false),
+                    Year = table.Column<int>(type: "int", maxLength: 4, nullable: false),
                     Collection = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Copies = table.Column<byte>(type: "tinyint", nullable: false)
                 },

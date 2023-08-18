@@ -1,9 +1,11 @@
 ﻿using LibraryBackend.context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace LibraryBackend
 {
     public class Startup
