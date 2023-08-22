@@ -23,7 +23,7 @@ namespace LibraryBackend.DTO.Books
             ErrorMessage = "El campo apellido materno sólo puede tener un máximo de 20 caracteres")]
         public string? AuthorMotherName { get; set; } = null!;
 
-        [Required(ErrorMessage = "El campo editorial es requerido"), StringLength(maximumLength: 20,
+        [Required(ErrorMessage = "El campo editorial es requerido"), StringLength(maximumLength: 50,
             ErrorMessage = "El campo editorial sólo puede tener un máximo de 20 caracteres")]
         public string Publisher { get; set; } = null!;
 
@@ -37,7 +37,7 @@ namespace LibraryBackend.DTO.Books
             ErrorMessage = "El campo colección sólo puede tener un máximo de 20 caracteres")]
         public string Collection { get; set; } = null!;
 
-        [Required, MaxLength(250)]
+        [Required(ErrorMessage = "Debe especificar un número de copias entre 0 y 250")]
         public byte Copies { get; set; }
     }
 }

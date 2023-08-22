@@ -16,6 +16,5 @@ namespace LibraryBackend.context
         }
 
         public DbSet<Book> Books { get; set; } = null!;
-
     }
 }
