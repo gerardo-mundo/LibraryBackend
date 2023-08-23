@@ -1,30 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace LibraryBackend.Entities
+namespace LibraryBackend.DTO.Publications
 {
-    public class Publication
+    public class PublicationDTO
     {
         public int Id { get; set; }
-        [Required, Column(TypeName = "nvarchar(11)")]
         public PublicationTypes Type { get; set; }
-        [Required, MaxLength(150)]
         public string Title { get; set; } = null!;
-        [Required, MaxLength(120)]
         public string Author { get; set; } = null!;
-        [MaxLength(120)]
         public string? AuthorTwo { get; set; }
-        [MaxLength(120)]
         public string? AuthorThree { get; set; }
-        [MaxLength(120)]
         public string? AuthorFour { get; set; }
-        [Required, MaxLength(50)]
         public string Publisher { get; set; } = null!;
         public long? ISBN { get; set; }
         public int? ISSN { get; set; }
-        [Required]
         public int Year { get; set; }
-        [Required, MaxLength(10)]
         public string Vol { get; set; } = null!;
     }
 }

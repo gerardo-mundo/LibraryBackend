@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryBackend.DTO.Books;
+using LibraryBackend.DTO.Publications;
 using LibraryBackend.Entities;
 
 namespace LibraryBackend.Utilities
@@ -10,6 +11,9 @@ namespace LibraryBackend.Utilities
         {
             CreateMap<BookCreationDTO, Book>();
             CreateMap<Book, BookDTO>();
+
+            CreateMap<PublicationCreationDTO, Publication>();
+            CreateMap<Publication, PublicationDTO>();
         }
     }
 }
