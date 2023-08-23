@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using LibraryBackend.Entities;
-using LibraryBackend.context;
 
 namespace LibraryBackend.context
 {
@@ -16,5 +15,6 @@ namespace LibraryBackend.context
         }
 
         public DbSet<Book> Books { get; set; } = null!;
+        public DbSet<Publication> Publications { get; set; } = null!;
     }
 }
