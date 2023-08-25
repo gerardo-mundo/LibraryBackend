@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LibraryBackend.Utilities.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryBackend.Entities
@@ -20,11 +21,13 @@ namespace LibraryBackend.Entities
         public string? AuthorFour { get; set; }
         [Required, MaxLength(50)]
         public string Publisher { get; set; } = null!;
-        public long? ISBN { get; set; }
-        public int? ISSN { get; set; }
+        [MaxLength(16)]
+        public string? ISBN { get; set; }
+        [MaxLength(9)]
+        public string? ISSN { get; set; }
         [Required]
         public int Year { get; set; }
-        [Required, MaxLength(10)]
+        [Required, MaxLength(10)] 
         public string Vol { get; set; } = null!;
     }
 }

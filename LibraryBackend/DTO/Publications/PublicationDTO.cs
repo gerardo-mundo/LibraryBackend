@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using LibraryBackend.Utilities.Enums;
 
 namespace LibraryBackend.DTO.Publications
 {
@@ -14,8 +15,8 @@ namespace LibraryBackend.DTO.Publications
         public string? AuthorThree { get; set; }
         public string? AuthorFour { get; set; }
         public string Publisher { get; set; } = null!;
-        public long? ISBN { get; set; }
-        public int? ISSN { get; set; }
+        public string? ISBN { get; set; }
+        public string? ISSN { get; set; }
         public int Year { get; set; }
         public string Vol { get; set; } = null!;
     }

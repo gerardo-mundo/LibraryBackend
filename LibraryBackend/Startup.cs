@@ -20,8 +20,10 @@ namespace LibraryBackend
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = 
-            ReferenceHandler.IgnoreCycles);
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            }).AddNewtonsoftJson();
 
             services.AddEndpointsApiExplorer();
 

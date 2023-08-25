@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using LibraryBackend.Utilities.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,7 +7,7 @@ namespace LibraryBackend.DTO.Publications
 {
     public class PublicationCreationDTO
     {
-        [Required(ErrorMessage = "Este campo es requerido"), Column(TypeName = "nvarchar(11)")]
+        [Required(ErrorMessage = "Este campo es requerido")]
         public PublicationTypes Type { get; set; }
         [Required(ErrorMessage = "Este campo es requerido"), MaxLength(150)]
         public string Title { get; set; } = null!;
@@ -20,8 +21,10 @@ namespace LibraryBackend.DTO.Publications
         public string? AuthorFour { get; set; }
         [Required(ErrorMessage = "Este campo es requerido"), MaxLength(50)]
         public string Publisher { get; set; } = null!;
-        public long? ISBN { get; set; }
-        public int? ISSN { get; set; }
+        [StringLength(16, ErrorMessage = "No es un ISBN válido")]
+        public string? ISBN { get; set; }
+        [StringLength(9, ErrorMessage = "No es un ISBN válido")]
+        public string? ISSN { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public int Year { get; set; }
         [Required(ErrorMessage = "Este campo es requerido"), MaxLength(10)]

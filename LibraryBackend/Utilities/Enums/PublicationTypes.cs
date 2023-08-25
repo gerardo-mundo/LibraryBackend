@@ -1,6 +1,10 @@
-﻿public enum PublicationTypes
+﻿namespace LibraryBackend.Utilities.Enums
 {
-    Articulo,
-    Revista,
-    Publicacion
+    public enum PublicationTypes
+    {
+        Articulo = 1,
+        Publicacion = 2,
+        Revista = 3,
+        
+    }
 }

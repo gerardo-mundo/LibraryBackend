@@ -14,6 +14,8 @@ namespace LibraryBackend.Utilities
 
             CreateMap<PublicationCreationDTO, Publication>();
             CreateMap<Publication, PublicationDTO>();
+            CreateMap<PublicationPatchDTO, Publication>().ReverseMap();
+
         }
     }
 }
