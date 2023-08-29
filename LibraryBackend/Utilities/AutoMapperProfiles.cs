@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryBackend.DTO.Books;
 using LibraryBackend.DTO.Publications;
+using LibraryBackend.DTO.Students;
 using LibraryBackend.Entities;
 
 namespace LibraryBackend.Utilities
@@ -15,6 +16,9 @@ namespace LibraryBackend.Utilities
             CreateMap<PublicationCreationDTO, Publication>();
             CreateMap<Publication, PublicationDTO>();
             CreateMap<PublicationPatchDTO, Publication>().ReverseMap();
+
+            CreateMap<StudentCreationDTO, Student>();
+            CreateMap<Student, StudentDTO>();
 
         }
     }
