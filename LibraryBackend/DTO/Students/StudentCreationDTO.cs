@@ -4,7 +4,7 @@ namespace LibraryBackend.DTO.Students
 {
     public class StudentCreationDTO
     {
-        [Required(ErrorMessage ="El nombre del studiante es requerido"), 
+        [Required(ErrorMessage ="El nombre del estudiante es requerido"), 
             MaxLength(40, ErrorMessage = "Se requiere un máximo de 40 caracteres")]
         public string Name { get; set; } = null!;
         [MaxLength(40)]
@@ -19,6 +19,6 @@ namespace LibraryBackend.DTO.Students
             MaxLength(8, ErrorMessage = "Se admiten un máximo de 8 caracteres")]
         public string EnrollmentNum { get; set; } = null!;
         [MaxLength(120)]
-        public string? Adress { get; set; } = null!;
+        public string? Address { get; set; } = null!;
     }
 }

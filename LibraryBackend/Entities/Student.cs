@@ -16,6 +16,6 @@ namespace LibraryBackend.Entities
         [Required, MaxLength(8)]
         public string EnrollmentNum { get; set; } = null!;
         [MaxLength(120)]
-        public string? Adress { get; set; } = null!;
+        public string? Address { get; set; } = null!;
     }
 }

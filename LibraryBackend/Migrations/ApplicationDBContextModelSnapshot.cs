@@ -144,7 +144,7 @@ namespace LibraryBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 

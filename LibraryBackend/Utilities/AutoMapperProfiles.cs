@@ -19,7 +19,7 @@ namespace LibraryBackend.Utilities
 
             CreateMap<StudentCreationDTO, Student>();
             CreateMap<Student, StudentDTO>();
-
+            CreateMap<StudentPatchDTO, Student>().ReverseMap();
         }
     }
 }
