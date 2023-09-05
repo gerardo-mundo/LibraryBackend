@@ -2,6 +2,7 @@
 using LibraryBackend.DTO.Books;
 using LibraryBackend.DTO.Publications;
 using LibraryBackend.DTO.Students;
+using LibraryBackend.DTO.Thesis;
 using LibraryBackend.Entities;
 
 namespace LibraryBackend.Utilities
@@ -20,6 +21,10 @@ namespace LibraryBackend.Utilities
             CreateMap<StudentCreationDTO, Student>();
             CreateMap<Student, StudentDTO>();
             CreateMap<StudentPatchDTO, Student>().ReverseMap();
+
+            CreateMap<ThesisCreationDTO, Thesis>();
+            CreateMap<Thesis, ThesisDTO>();
+            CreateMap<ThesisPatchDTO, Thesis>().ReverseMap();
         }
     }
 }

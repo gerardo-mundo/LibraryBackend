@@ -32,6 +32,8 @@ namespace LibraryBackend
                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"));
             });
 
+            services.AddScoped<ApplicationDBContext>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 
             services.AddSwaggerGen(c => 
