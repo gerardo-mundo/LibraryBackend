@@ -60,7 +60,7 @@ namespace LibraryBackend.Controllers
             return NoContent();
         }
 
-        [HttpPatch("id:int")]
+        [HttpPatch("{id:int}")]
         public async Task<ActionResult> PatchThesis(int id, JsonPatchDocument<ThesisPatchDTO> patchDocument)
         {
             var thesisDB = await Context.Thesis.FirstOrDefaultAsync(t => t.Id == id);
