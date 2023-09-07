@@ -1,12 +1,12 @@
-﻿namespace LibraryBackend.DTO.Students
+﻿namespace LibraryBackend.DTO.Users
 {
-    public class StudentDTO
+    public class ProfessorDTO
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string SecondName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string MotherName { get; set; } = null!;
-        public string EnrollmentNum { get; set; } = null!;
+        public string EmployeeKey { get; set; } = null!;
     }
 }

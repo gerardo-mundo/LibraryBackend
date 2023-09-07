@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LibraryBackend.Utilities.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LibraryBackend.DTO.Students
+namespace LibraryBackend.DTO.Users
 {
-    public class StudentPatchDTO
+    public class UserPatchDTO
     {
+        [Required, Column(TypeName = "nvarchar(7)")]
+        public UserTypes Type { get; set; }
         [Required(ErrorMessage = "El nombre del estudiante es requerido"),
             MaxLength(40, ErrorMessage = "Se requiere un máximo de 40 caracteres")]
         public string Name { get; set; } = null!;
@@ -15,9 +20,10 @@ namespace LibraryBackend.DTO.Students
         [Required(ErrorMessage = "El apellido materno es requerido"),
             MaxLength(60, ErrorMessage = "Se admiten un máximo de 60 caracteres")]
         public string MotherName { get; set; } = null!;
-        [Required(ErrorMessage = "La mátricula del alumno es requerida"),
-            MaxLength(8, ErrorMessage = "Se admiten un máximo de 8 caracteres")]
-        public string EnrollmentNum { get; set; } = null!;
+        [StringLength(8, MinimumLength = 8, ErrorMessage = "No es una matricula válida")]
+        public string? EnrollmentNum { get; set; } = null!;
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "No es un número de empleado válido")]
+        public string? EmployeeKey { get; set; } = null!;
         [MaxLength(120)]
         public string? Address { get; set; } = null!;
     }
