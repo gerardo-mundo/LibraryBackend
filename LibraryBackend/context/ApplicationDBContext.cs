@@ -18,5 +18,6 @@ namespace LibraryBackend.context
         public DbSet<Publication> Publications { get; set; } = null!;
         public DbSet<Student> Students { get; set; } = null!;
         public DbSet<Thesis> Thesis { get; set; } = null!;
+        public DbSet<Employee> Employees { get; set; }
     }
 }

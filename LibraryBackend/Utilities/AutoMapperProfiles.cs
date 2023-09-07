@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryBackend.DTO.Books;
+using LibraryBackend.DTO.Employees;
 using LibraryBackend.DTO.Publications;
 using LibraryBackend.DTO.Students;
 using LibraryBackend.DTO.Thesis;
@@ -25,6 +26,9 @@ namespace LibraryBackend.Utilities
             CreateMap<ThesisCreationDTO, Thesis>();
             CreateMap<Thesis, ThesisDTO>();
             CreateMap<ThesisPatchDTO, Thesis>().ReverseMap();
+
+            CreateMap<EmployeeCreationDTO, Employee>();
+            CreateMap<Employee, EmployeeDTO>();
         }
     }
 }
