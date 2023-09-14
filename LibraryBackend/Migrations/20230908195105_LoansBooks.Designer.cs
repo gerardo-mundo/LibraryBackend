@@ -4,6 +4,7 @@ using LibraryBackend.context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230908195105_LoansBooks")]
+    partial class LoansBooks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace LibraryBackend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Adquisition")
-                        .HasColumnType("int");
 
                     b.Property<string>("AuthorMotherName")
                         .HasMaxLength(20)
@@ -54,6 +53,9 @@ namespace LibraryBackend.Migrations
                     b.Property<byte>("Copies")
                         .HasColumnType("tinyint");
 
+                    b.Property<long>("ISBN")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -74,28 +76,7 @@ namespace LibraryBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books", (string)null);
-                });
-
-            modelBuilder.Entity("LibraryBackend.Entities.BorrowedBooks", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Adquisition")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LoanId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LoanId");
-
-                    b.ToTable("BorrowedBooks", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.Employee", b =>
@@ -140,7 +121,7 @@ namespace LibraryBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.Loan", b =>
@@ -169,7 +150,22 @@ namespace LibraryBackend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Loans", (string)null);
+                    b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("LibraryBackend.Entities.LoanBook", b =>
+                {
+                    b.Property<int>("LoanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LoanId", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("LoansBooks");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.Publication", b =>
@@ -229,7 +225,7 @@ namespace LibraryBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publications", (string)null);
+                    b.ToTable("Publications");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.Thesis", b =>
@@ -268,7 +264,7 @@ namespace LibraryBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Thesis", (string)null);
+                    b.ToTable("Thesis");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.User", b =>
@@ -316,18 +312,7 @@ namespace LibraryBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("LibraryBackend.Entities.BorrowedBooks", b =>
-                {
-                    b.HasOne("LibraryBackend.Entities.Loan", "Loan")
-                        .WithMany("BorrowedBooks")
-                        .HasForeignKey("LoanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Loan");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.Loan", b =>
@@ -349,6 +334,30 @@ namespace LibraryBackend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("LibraryBackend.Entities.LoanBook", b =>
+                {
+                    b.HasOne("LibraryBackend.Entities.Book", "Book")
+                        .WithMany("LoansBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LibraryBackend.Entities.Loan", "Loan")
+                        .WithMany("LoansBooks")
+                        .HasForeignKey("LoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Loan");
+                });
+
+            modelBuilder.Entity("LibraryBackend.Entities.Book", b =>
+                {
+                    b.Navigation("LoansBooks");
+                });
+
             modelBuilder.Entity("LibraryBackend.Entities.Employee", b =>
                 {
                     b.Navigation("Loans");
@@ -356,7 +365,7 @@ namespace LibraryBackend.Migrations
 
             modelBuilder.Entity("LibraryBackend.Entities.Loan", b =>
                 {
-                    b.Navigation("BorrowedBooks");
+                    b.Navigation("LoansBooks");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.User", b =>

@@ -5,6 +5,9 @@ using LibraryBackend.DTO.Publications;
 using LibraryBackend.DTO.Users;
 using LibraryBackend.DTO.Thesis;
 using LibraryBackend.Entities;
+using LibraryBackend.DTO.Loans;
+using LibraryBackend.Migrations;
+using LibraryBackend.DTO.BorrowedBooks;
 
 namespace LibraryBackend.Utilities
 {
@@ -12,7 +15,7 @@ namespace LibraryBackend.Utilities
     {
         public AutoMapperProfiles()
         {
-            CreateMap<BookCreationDTO, Book>();
+            CreateMap<BookCreationDTO, Book>().ReverseMap();
             CreateMap<Book, BookDTO>();
 
             CreateMap<PublicationCreationDTO, Publication>();
@@ -31,6 +34,28 @@ namespace LibraryBackend.Utilities
 
             CreateMap<EmployeeCreationDTO, Employee>();
             CreateMap<Employee, EmployeeDTO>();
+
+            CreateMap<LoanCreationDTO, Loan>()
+            .ForMember(loan => loan.BorrowedBooks,
+                options => options.MapFrom(MapBorrowedBooks));
+            CreateMap<Loan, LoanDTO>();
+
+            CreateMap<BorrowedBookCreationDTO, BorrowedBooks>();
+            CreateMap<BorrowedBooks, BorrowedBookDTO>();
+        }
+
+        private List<BorrowedBooks> MapBorrowedBooks(LoanCreationDTO loanCreationDTO, Loan loan)
+        {
+            var result = new List<BorrowedBooks>();
+
+            if (result == null) { return result; }
+
+            foreach (var adquisition in loanCreationDTO.BorrowedBooks)
+            {
+                result.Add(new BorrowedBooks() { Adquisition = adquisition });
+            }
+
+            return result;
         }
     }
 }

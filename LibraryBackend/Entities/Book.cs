@@ -7,18 +7,18 @@ namespace LibraryBackend.Entities
         public int Id { get; set; }
         [Required, MaxLength(80)]
         public string Title { get; set; } = null!;
-        [Required,MaxLength(20)]
+        [Required, MaxLength(20)]
         public string AuthorName { get; set; } = null!;
         [MaxLength(20)]
         public string? AuthorSecondName { get; set; }
-        [Required,MaxLength(20)]
+        [Required, MaxLength(20)]
         public string LastName { get; set; } = null!;
         [MaxLength(20)]
         public string? AuthorMotherName { get; set; } = null!;
-        [Required,MaxLength(50)]
+        [Required, MaxLength(50)]
         public string Publisher { get; set; } = null!;
         [Required]
-        public long ISBN { get; set; }
+        public int Adquisition { get; set; }
         [Required]
         public int Year { get; set; }
         [Required, MaxLength(20)]

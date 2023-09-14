@@ -22,6 +22,6 @@ namespace LibraryBackend.Entities
         public string Email { get; set; } = null!;
         [Required, MaxLength(10)]
         public string EmployeeKey { get; set; } = null!;
-
+        public List<Loan> Loans { get; set; } = null!;
     }
 }

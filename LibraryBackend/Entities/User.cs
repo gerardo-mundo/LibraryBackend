@@ -23,5 +23,6 @@ namespace LibraryBackend.Entities
         public string? EmployeeKey { get; set; } = null!;
         [MaxLength(120)]
         public string? Address { get; set; } = null!;
+        public List<Loan> Loans { get; set; } = null!;
     }
 }
