@@ -6,7 +6,7 @@ namespace LibraryBackend.DTO.Loans
     {
         public int EmployeeId { get; set; }
         public int UserId { get; set; }
-        [Required, MaxLength(3)]
-        public List<int> BorrowedBooks { get; set; } = null!;
+        [Required, MinLength(1), MaxLength(3)]
+        public List<int> BorrowedBooks { get; set; }
     }
 }

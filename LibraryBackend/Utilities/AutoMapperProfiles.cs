@@ -39,8 +39,9 @@ namespace LibraryBackend.Utilities
             .ForMember(loan => loan.BorrowedBooks,
                 options => options.MapFrom(MapBorrowedBooks));
             CreateMap<Loan, LoanDTO>();
+            CreateMap<Loan, LoanDTOWithBorrowedBooks>();
+            CreateMap<LoanPatchDTO, Loan>().ReverseMap();
 
-            CreateMap<BorrowedBookCreationDTO, BorrowedBooks>();
             CreateMap<BorrowedBooks, BorrowedBookDTO>();
         }
 

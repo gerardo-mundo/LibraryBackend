@@ -6,6 +6,7 @@ using AutoMapper;
 using LibraryBackend.DTO.Loans;
 using System.Linq;
 using LibraryBackend.DTO.BorrowedBooks;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace LibraryBackend.Controllers
 {
@@ -30,21 +31,21 @@ namespace LibraryBackend.Controllers
             return Mapper.Map<List<LoanDTO>>(loans);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Loan>> GetLoan(int id)
+        [HttpGet, Route("get-borrowed-books")]
+        public async Task<ActionResult<List<LoanDTOWithBorrowedBooks>>> GetLoansWithBorrowedBooks()
         {
-            if (Context.Loans == null)
-            {
-                return NotFound();
-            }
-            var loan = await Context.Loans.FindAsync(id);
+            var loans = await Context.Loans.Include(loandBD => loandBD.BorrowedBooks).ToListAsync();
+            return Mapper.Map<List<LoanDTOWithBorrowedBooks>>(loans);
+        }
 
-            if (loan == null)
-            {
-                return NotFound();
-            }
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<LoanDTOWithBorrowedBooks>> GetLoanById(int id)
+        {
+            var loan = await Context.Loans.Include(loandBD => loandBD.BorrowedBooks)
+                .FirstOrDefaultAsync(l => l.Id == id);
+            if(loan == null) { return NotFound(); }
 
-            return loan;
+            return Mapper.Map<LoanDTOWithBorrowedBooks>(loan);
         }
 
         [HttpPost]
@@ -60,37 +61,53 @@ namespace LibraryBackend.Controllers
             {
                 return BadRequest("Uno o varios de los libros no existen");
             }
-            if (!userExist || !employeeExist) { return BadRequest("El usuario o empleado no se encuentran registrados"); }
+            if (!userExist || !employeeExist) { return NotFound("El usuario o empleado no se encuentran registrados"); }
 
             Loan loan = Mapper.Map<Loan>(loanCreation);
             Context.Add(loan);
             await Context.SaveChangesAsync();
 
-            return Ok(loan);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLoan(int id)
-        {
-            if (Context.Loans == null)
-            {
-                return NotFound();
-            }
-            var loan = await Context.Loans.FindAsync(id);
-            if (loan == null)
-            {
-                return NotFound();
-            }
-
-            Context.Loans.Remove(loan);
-            await Context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool LoanExists(int id)
+        [HttpPatch("id:int")]
+        public async Task<ActionResult> PatchLoan(int id, JsonPatchDocument<LoanPatchDTO> patchDocument)
         {
-            return (Context.Loans?.Any(e => e.Id == id)).GetValueOrDefault();
+            var loanDB = await Context.Loans.FirstOrDefaultAsync(l => l.Id == id);
+            if (loanDB == null) { return NotFound(nameof(loanDB)); }
+
+            var loanDTO = Mapper.Map<LoanPatchDTO>(loanDB);
+            patchDocument.ApplyTo(loanDTO, ModelState);
+            
+            var isValid = TryValidateModel(loanDTO);
+            if(!isValid) { return BadRequest(ModelState); }
+
+            Mapper.Map(loanDTO, loanDB);
+            await Context.SaveChangesAsync();
+            return NoContent();
+            
+            /*
+             Example Input data: 
+            [
+              {
+                "path": "/DevolutionDate",
+                "op": "replace",
+                "value": "yyyy-MM-dd",
+              }
+            ]
+             */
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteLoan(int id)
+        {
+            var loanExist = await Context.Loans.AnyAsync(l => l.Id == id);
+            if (!loanExist) { return NotFound(); }
+
+            Context.Remove(new Loan() {Id = id });
+            await Context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

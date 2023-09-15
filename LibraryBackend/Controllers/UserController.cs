@@ -57,14 +57,15 @@ namespace LibraryBackend.Controllers
         {
             bool userExist = await Contex.Users.AnyAsync(u =>
                                      u.EnrollmentNum == userCreation.EnrollmentNum && u.EmployeeKey == userCreation.EmployeeKey);
-            
+
             bool validCreadentials = userCreation.EnrollmentNum?.Length < 8
                && userCreation.EmployeeKey?.Length < 10;
 
             if (userExist)
             {
                 return BadRequest("El usuario ya se encuentra registrado");
-            } else if (validCreadentials)
+            }
+            else if (validCreadentials)
             {
                 return BadRequest("No es una matrícula o numero de empleado válido");
             }

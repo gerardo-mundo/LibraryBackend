@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
@@ -36,10 +38,13 @@ namespace LibraryBackend
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 
-            services.AddSwaggerGen(c => 
+            services.AddSwaggerGen(c =>
             c.SwaggerDoc("v1", new OpenApiInfo()
             {
-                Title = "Library WebApi", Description = "WebApi for library management", License = MIT, Version = "v1", 
+                Title = "Library WebApi",
+                Description = "WebApi for library management",
+                License = MIT,
+                Version = "v1",
                 Contact = new OpenApiContact() { Name = "Gerardo Mundo", Email = "gerardo.perez@udgvirtual.udg.mx" }
             }));
 
@@ -51,7 +56,7 @@ namespace LibraryBackend
             .WithOrigins("")));
         }
 
-       public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Configure the HTTP request pipeline.
             if (env.IsDevelopment())
