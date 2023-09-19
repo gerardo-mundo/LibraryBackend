@@ -1,4 +1,5 @@
 ﻿using LibraryBackend.context;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,9 +35,9 @@ namespace LibraryBackend
                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"));
             });
 
-            services.AddScoped<ApplicationDBContext>();
+            //services.AddScoped<ApplicationDBContext>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
             services.AddSwaggerGen(c =>
             c.SwaggerDoc("v1", new OpenApiInfo()
@@ -49,6 +50,10 @@ namespace LibraryBackend
             }));
 
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDBContext>()
+                .AddDefaultTokenProviders();
 
             services.AddDataProtection();
 

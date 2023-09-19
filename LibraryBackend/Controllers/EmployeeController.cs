@@ -9,6 +9,8 @@ using LibraryBackend.Entities;
 using LibraryBackend.context;
 using AutoMapper;
 using LibraryBackend.DTO.Employees;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryBackend.Controllers
 {

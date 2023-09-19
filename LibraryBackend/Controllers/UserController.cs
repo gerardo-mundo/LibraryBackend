@@ -3,6 +3,8 @@ using LibraryBackend.context;
 using LibraryBackend.DTO.Users;
 using LibraryBackend.Entities;
 using LibraryBackend.Utilities.Enums;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
