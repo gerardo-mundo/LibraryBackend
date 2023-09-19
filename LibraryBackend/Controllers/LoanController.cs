@@ -7,6 +7,7 @@ using LibraryBackend.DTO.Loans;
 using System.Linq;
 using LibraryBackend.DTO.BorrowedBooks;
 using Microsoft.AspNetCore.JsonPatch;
+using LibraryBackend.Migrations;
 
 namespace LibraryBackend.Controllers
 {
@@ -43,7 +44,7 @@ namespace LibraryBackend.Controllers
         {
             var loan = await Context.Loans.Include(loandBD => loandBD.BorrowedBooks)
                 .FirstOrDefaultAsync(l => l.Id == id);
-            if(loan == null) { return NotFound(); }
+            if (loan == null) { return NotFound(); }
 
             return Mapper.Map<LoanDTOWithBorrowedBooks>(loan);
         }
@@ -71,28 +72,41 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpPatch("id:int")]
-        public async Task<ActionResult> PatchLoan(int id, JsonPatchDocument<LoanPatchDTO> patchDocument)
+        public async Task<ActionResult> PatchLoan(int id, [FromBody] JsonPatchDocument<LoanPatchDTO> patchDocument)
         {
+            if(patchDocument == null) { return BadRequest("Hizo falta un elemento para actualizar"); }
             var loanDB = await Context.Loans.FirstOrDefaultAsync(l => l.Id == id);
-            if (loanDB == null) { return NotFound(nameof(loanDB)); }
+            if (loanDB == null) { return NotFound(); }
+
 
             var loanDTO = Mapper.Map<LoanPatchDTO>(loanDB);
+
             patchDocument.ApplyTo(loanDTO, ModelState);
-            
-            var isValid = TryValidateModel(loanDTO);
-            if(!isValid) { return BadRequest(ModelState); }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             Mapper.Map(loanDTO, loanDB);
+
+
             await Context.SaveChangesAsync();
+
             return NoContent();
-            
+
             /*
              Example Input data: 
             [
               {
                 "path": "/DevolutionDate",
                 "op": "replace",
-                "value": "yyyy-MM-dd",
+                "value": "2023-09-15"
+              },
+              {
+                "path": "/Returned",
+                "op": "replace",
+                "value": true
               }
             ]
              */
@@ -104,7 +118,7 @@ namespace LibraryBackend.Controllers
             var loanExist = await Context.Loans.AnyAsync(l => l.Id == id);
             if (!loanExist) { return NotFound(); }
 
-            Context.Remove(new Loan() {Id = id });
+            Context.Remove(new Loan() { Id = id });
             await Context.SaveChangesAsync();
 
             return NoContent();

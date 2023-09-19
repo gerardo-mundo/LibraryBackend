@@ -6,6 +6,7 @@ namespace LibraryBackend.Entities
     public class Loan
     {
         public int Id { get; set; }
+        public bool Returned { get; set; } = false;
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0: dd-mm-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LoanDate { get; set; } = DateTime.Now;
