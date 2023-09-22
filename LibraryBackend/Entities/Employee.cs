@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibraryBackend.Entities
 {
@@ -23,5 +24,7 @@ namespace LibraryBackend.Entities
         [Required, MaxLength(10)]
         public string EmployeeKey { get; set; } = null!;
         public List<Loan> Loans { get; set; } = null!;
+        public string? UserId { get; set; }
+        public IdentityUser User { get; set; }
     }
 }
