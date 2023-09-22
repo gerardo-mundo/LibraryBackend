@@ -9,8 +9,10 @@ using LibraryBackend.Entities;
 using LibraryBackend.context;
 using AutoMapper;
 using LibraryBackend.DTO.Employees;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using LibraryBackend.Utilities.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibraryBackend.Controllers
 {
@@ -28,6 +30,7 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult<List<EmployeeDTO>>> GetEmployees()
         {
             var employees = await Context.Employees.ToListAsync();

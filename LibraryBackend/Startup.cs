@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace LibraryBackend
@@ -37,17 +39,50 @@ namespace LibraryBackend
 
             //services.AddScoped<ApplicationDBContext>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtkey"])),
+                    ClockSkew = TimeSpan.Zero
+                });
 
             services.AddSwaggerGen(c =>
-            c.SwaggerDoc("v1", new OpenApiInfo()
             {
-                Title = "Library WebApi",
-                Description = "WebApi for library management",
-                License = MIT,
-                Version = "v1",
-                Contact = new OpenApiContact() { Name = "Gerardo Mundo", Email = "gerardo.perez@udgvirtual.udg.mx" }
-            }));
+                c.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Title = "Library WebApi",
+                    Description = "WebApi for library management",
+                    License = MIT,
+                    Version = "v1",
+                    Contact = new OpenApiContact() { Name = "Gerardo Mundo", Email = "gerardo.perez@udgvirtual.udg.mx" }
+                });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new String[]{}
+                    }
+                });
+            });
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -55,7 +90,8 @@ namespace LibraryBackend
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddDataProtection();
+            services.AddAuthorization(options => options.AddPolicy("Admin", policy =>
+            policy.RequireClaim("Admin")));
 
             services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyMethod()
             .WithOrigins("")));
