@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using LibraryBackend.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using LibraryBackend.Utilities;
 
 namespace LibraryBackend.context
 {
-    public class ApplicationDBContext : IdentityDbContext
+    public class ApplicationDBContext : IdentityDbContext<ApplicationIdentityUser>
     {
         public ApplicationDBContext(DbContextOptions options) : base(options)
         {

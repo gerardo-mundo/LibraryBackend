@@ -31,7 +31,7 @@ namespace LibraryBackend.Controllers
             var result = await UserManager.CreateAsync(user, userCredentials.Password);
 
             if (result.Succeeded)
-            {
+            { 
                 return BuildToken(userCredentials);
             }
             else
