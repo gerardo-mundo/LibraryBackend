@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using LibraryBackend.Utilities;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace LibraryBackend
@@ -86,7 +87,7 @@ namespace LibraryBackend
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationIdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
 

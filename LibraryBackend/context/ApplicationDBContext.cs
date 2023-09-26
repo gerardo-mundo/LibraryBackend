@@ -7,7 +7,7 @@ namespace LibraryBackend.context
 {
     public class ApplicationDBContext : IdentityDbContext<ApplicationIdentityUser>
     {
-        public ApplicationDBContext(DbContextOptions options) : base(options)
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
         }
 
