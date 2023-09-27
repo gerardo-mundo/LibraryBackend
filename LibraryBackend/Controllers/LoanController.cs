@@ -7,7 +7,10 @@ using LibraryBackend.DTO.Loans;
 using System.Linq;
 using LibraryBackend.DTO.BorrowedBooks;
 using Microsoft.AspNetCore.JsonPatch;
-using LibraryBackend.Migrations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using LibraryBackend.Utilities;
 
 namespace LibraryBackend.Controllers
 {
@@ -16,13 +19,16 @@ namespace LibraryBackend.Controllers
     public class LoanController : ControllerBase
     {
         private readonly ApplicationDBContext Context;
-
+        private readonly UserManager<ApplicationIdentityUser> UserManager;
         public IMapper Mapper { get; }
 
-        public LoanController(ApplicationDBContext context, IMapper mapper)
+        public LoanController(ApplicationDBContext context, 
+            IMapper mapper, 
+            UserManager<ApplicationIdentityUser> userManager)
         {
             Context = context;
             Mapper = mapper;
+            UserManager = userManager;
         }
 
         [HttpGet]
@@ -50,10 +56,16 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Loan>> PostLoan(LoanCreationDTO loanCreation)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> PostLoan(LoanCreationDTO loanCreation)
         {
+            var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
+                var email = emailClaim?.Value;
+                var account = await UserManager.FindByEmailAsync(email);
+                var accountId = account.Id;           
+            
             var userExist = await Context.Users.AnyAsync(u => u.Id == loanCreation.UserId);
-            var employeeExist = await Context.Employees.AnyAsync(e => e.Id == loanCreation.EmployeeId);
+
             var adquisitionsList = await Context.Books.Where(book => loanCreation.BorrowedBooks.Contains(book.Adquisition))
                 .Select(b => b.Adquisition)
                 .ToListAsync();
@@ -62,9 +74,11 @@ namespace LibraryBackend.Controllers
             {
                 return BadRequest("Uno o varios de los libros no existen");
             }
-            if (!userExist || !employeeExist) { return NotFound("El usuario o empleado no se encuentran registrados"); }
+
+            if (!userExist || accountId == null) { return NotFound("El usuario o empleado no se encuentra registrado"); }
 
             Loan loan = Mapper.Map<Loan>(loanCreation);
+            loan.AccountId = accountId;
             Context.Add(loan);
             await Context.SaveChangesAsync();
 
@@ -89,10 +103,7 @@ namespace LibraryBackend.Controllers
             }
 
             Mapper.Map(loanDTO, loanDB);
-
-
             await Context.SaveChangesAsync();
-
             return NoContent();
 
             /*
@@ -113,6 +124,7 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
         public async Task<IActionResult> DeleteLoan(int id)
         {
             var loanExist = await Context.Loans.AnyAsync(l => l.Id == id);

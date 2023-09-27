@@ -1,7 +1,4 @@
-﻿using LibraryBackend.DTO.BorrowedBooks;
-using System.ComponentModel.DataAnnotations;
-
-namespace LibraryBackend.DTO.Loans
+﻿namespace LibraryBackend.DTO.Loans
 {
     public class LoanDTO
     {
@@ -9,7 +6,7 @@ namespace LibraryBackend.DTO.Loans
         public bool Returned { get; set; }
         public DateTime LoanDate { get; set; }
         public DateTime DevolutionDate { get; set; }
-        public int EmployeeId { get; set; }
+        public string AccountId { get; set; }
         public int UserId { get; set; }
     }
 }

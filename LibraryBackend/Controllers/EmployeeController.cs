@@ -28,7 +28,7 @@ namespace LibraryBackend.Controllers
             Context = context;
             Mapper = mapper;
         }
-
+        /*
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         public async Task<ActionResult<List<EmployeeDTO>>> GetEmployees()
@@ -88,5 +88,6 @@ namespace LibraryBackend.Controllers
         {
             return await Context.Employees.AnyAsync(e => e.Id == id);
         }
+        */
     }
 }

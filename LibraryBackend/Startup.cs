@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using LibraryBackend.Utilities;
+using System.IdentityModel.Tokens.Jwt;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace LibraryBackend
@@ -18,6 +19,7 @@ namespace LibraryBackend
     {
         public Startup(ConfigurationManager configuration)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             Configuration = configuration;
         }
 

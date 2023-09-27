@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LibraryBackend.Utilities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryBackend.Entities
@@ -17,8 +18,8 @@ namespace LibraryBackend.Entities
 
         //Navigation props and FK's
         public List<BorrowedBooks> BorrowedBooks { get; set; }
-        public int EmployeeId { get; set; }
-        public Employee Employee { get; set; }
+        public string AccountId { get; set; }
+        public ApplicationIdentityUser Account { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
     }

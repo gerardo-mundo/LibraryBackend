@@ -4,6 +4,7 @@ using LibraryBackend.context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230927004137_LoansAccounts")]
+    partial class LoansAccounts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,6 +160,9 @@ namespace LibraryBackend.Migrations
                     b.Property<DateTime?>("DevolutionDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("LoanDate")
                         .HasColumnType("datetime2");
 
@@ -170,6 +175,8 @@ namespace LibraryBackend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("UserId");
 
@@ -552,6 +559,10 @@ namespace LibraryBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("LibraryBackend.Entities.Employee", null)
+                        .WithMany("Loans")
+                        .HasForeignKey("EmployeeId");
+
                     b.HasOne("LibraryBackend.Entities.User", "User")
                         .WithMany("Loans")
                         .HasForeignKey("UserId")
@@ -612,6 +623,11 @@ namespace LibraryBackend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LibraryBackend.Entities.Employee", b =>
+                {
+                    b.Navigation("Loans");
                 });
 
             modelBuilder.Entity("LibraryBackend.Entities.Loan", b =>
