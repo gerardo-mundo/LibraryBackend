@@ -18,7 +18,7 @@ namespace LibraryBackend.Controllers
         private readonly UserManager<ApplicationIdentityUser> UserManager;
         private readonly SignInManager<ApplicationIdentityUser> SignInManager;
 
-        public AccountController(IConfiguration configuration, UserManager<ApplicationIdentityUser> userManager, 
+        public AccountController(IConfiguration configuration, UserManager<ApplicationIdentityUser> userManager,
             SignInManager<ApplicationIdentityUser> signInManager)
         {
             this.Configuration = configuration;
@@ -30,9 +30,9 @@ namespace LibraryBackend.Controllers
         [Route("register")]
         public async Task<ActionResult<AuthenticationResponse>> RegisterAccount(UserCredentials userCredentials)
         {
-            var user = new ApplicationIdentityUser 
-            { 
-                UserName = userCredentials.Email, 
+            var user = new ApplicationIdentityUser
+            {
+                UserName = userCredentials.Email,
                 Email = userCredentials.Email,
                 Name = userCredentials.Name,
                 LastName = userCredentials.LastName,
@@ -42,7 +42,7 @@ namespace LibraryBackend.Controllers
             var result = await UserManager.CreateAsync(user, userCredentials.Password);
 
             if (result.Succeeded)
-            { 
+            {
                 return BuildToken(userCredentials);
             }
             else
@@ -56,16 +56,49 @@ namespace LibraryBackend.Controllers
         [Route("login")]
         public async Task<ActionResult<AuthenticationResponse>> Login(LoginCredentials loginCredentials)
         {
-            var result = await SignInManager.PasswordSignInAsync(loginCredentials.Email, loginCredentials.Password, 
+            var result = await SignInManager.PasswordSignInAsync(loginCredentials.Email, loginCredentials.Password,
                 isPersistent: false, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
                 return await LoginToken(loginCredentials);
-            } 
+            }
             else
             {
                 return BadRequest("Hubo un error con las credenciales");
+            }
+        }
+
+        [HttpPatch]
+        [Route("update-password")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> UpdatePassword(UpdatePasswordDTO newPassword)
+        {
+            var emailClaim = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "email");
+            if (emailClaim == null)
+            {
+                return BadRequest("No se pudo encontrar la cuenta del usuario.");
+            }
+            var email = emailClaim.Value;
+            var user = await UserManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("Usuario no encontrado.");
+            }
+
+            // Generar el hash de la nueva contraseña y actualizarla en el usuario
+            var newPasswordHash = UserManager.PasswordHasher.HashPassword(user, newPassword.Password);
+            user.PasswordHash = newPasswordHash;
+
+            // Actualizar el usuario en la base de datos
+            var result = await UserManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest(result.Errors);
             }
         }
 
@@ -103,7 +136,7 @@ namespace LibraryBackend.Controllers
             var expires = DateTime.UtcNow.AddHours(8);
 
             var securityToken = new JwtSecurityToken(
-                issuer: null, audience: null, claims, notBefore: null, 
+                issuer: null, audience: null, claims, notBefore: null,
                 expires, signingCredentials);
 
             return new AuthenticationResponse()
@@ -115,7 +148,7 @@ namespace LibraryBackend.Controllers
         private async Task<AuthenticationResponse> LoginToken(LoginCredentials loginCredentials)
         {
             var user = await UserManager.FindByEmailAsync(loginCredentials.Email);
-            
+
             var claims = new List<Claim>()
             {
                 new Claim("email", user.Email),
