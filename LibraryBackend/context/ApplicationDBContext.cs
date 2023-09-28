@@ -20,7 +20,6 @@ namespace LibraryBackend.context
         public DbSet<Publication> Publications { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Thesis> Thesis { get; set; } = null!;
-        public DbSet<Employee> Employees { get; set; } = null!;
         public DbSet<Loan> Loans { get; set; } = null!;
         public DbSet<BorrowedBooks> BorrowedBooks { get; set; } = null!;
     }
