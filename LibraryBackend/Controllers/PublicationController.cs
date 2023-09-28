@@ -2,6 +2,8 @@
 using LibraryBackend.context;
 using LibraryBackend.DTO.Publications;
 using LibraryBackend.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ namespace LibraryBackend.Controllers
 {
     [ApiController]
     [Route("api/publications")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PublicationController : ControllerBase
     {
         private readonly IMapper mapper;
@@ -73,6 +76,7 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
         public async Task<ActionResult> DeletePublication(int id)
         {
             bool publicationExist = await context.Publications.AnyAsync(p => p.Id == id);

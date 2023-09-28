@@ -16,6 +16,7 @@ namespace LibraryBackend.Controllers
 {
     [Route("api/loans")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class LoanController : ControllerBase
     {
         private readonly ApplicationDBContext Context;
@@ -56,7 +57,6 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> PostLoan(LoanCreationDTO loanCreation)
         {
             var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();

@@ -93,8 +93,8 @@ namespace LibraryBackend
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthorization(options => options.AddPolicy("Admin", policy =>
-            policy.RequireClaim("Admin")));
+            services.AddAuthorization(options => options.AddPolicy("IsAdmin", policy =>
+            policy.RequireClaim("isAdmin")));
 
             services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyMethod()
             .WithOrigins("")));

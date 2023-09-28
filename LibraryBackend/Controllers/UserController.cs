@@ -13,6 +13,7 @@ namespace LibraryBackend.Controllers
 {
     [ApiController]
     [Route("api/users")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
         private readonly ApplicationDBContext Contex;
@@ -108,6 +109,7 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
         public async Task<ActionResult> DeleteUser(int id)
         {
             bool studentExist = await Contex.Users.AnyAsync(u => u.Id == id);

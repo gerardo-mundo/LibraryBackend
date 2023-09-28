@@ -2,6 +2,8 @@
 using LibraryBackend.context;
 using LibraryBackend.DTO.Thesis;
 using LibraryBackend.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ namespace LibraryBackend.Controllers
 {
     [Route("api/thesis")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ThesisController : ControllerBase
     {
         public ApplicationDBContext Context { get; }
@@ -78,6 +81,7 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
         public async Task<ActionResult> DeleteThesis(int id)
         {
             var thesis = await Context.Thesis.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);//Deja de trackear el obj con el Id específico

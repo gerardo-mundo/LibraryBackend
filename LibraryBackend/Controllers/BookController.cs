@@ -5,11 +5,14 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using LibraryBackend.Entities;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace LibraryBackend.Controllers
 {
     [ApiController]
     [Route("api/books")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BookController : ControllerBase
     {
         private readonly ApplicationDBContext Context;
@@ -85,6 +88,7 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
         public async Task<ActionResult> DeleteBook(int id)
         {
             var bookExist = await Context.Books.AnyAsync(book => book.Id == id);
