@@ -4,8 +4,6 @@ using LibraryBackend.Entities;
 using LibraryBackend.context;
 using AutoMapper;
 using LibraryBackend.DTO.Loans;
-using System.Linq;
-using LibraryBackend.DTO.BorrowedBooks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

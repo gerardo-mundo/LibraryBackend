@@ -1,5 +1,4 @@
-﻿
-namespace LibraryBackend.DTO.Books
+﻿namespace LibraryBackend.DTO.Books
 {
     public class BookDTO
     {

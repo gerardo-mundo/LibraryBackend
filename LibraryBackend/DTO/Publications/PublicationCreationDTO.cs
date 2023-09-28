@@ -1,7 +1,5 @@
 ﻿using LibraryBackend.Utilities.Enums;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryBackend.DTO.Publications
 {
