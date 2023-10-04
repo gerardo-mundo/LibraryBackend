@@ -14,7 +14,7 @@ namespace LibraryBackend.Controllers
 {
     [ApiController]
     [Route("api/books")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BookController : ControllerBase
     {
         private readonly ApplicationDBContext Context;

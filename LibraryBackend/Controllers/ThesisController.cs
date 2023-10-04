@@ -14,7 +14,7 @@ namespace LibraryBackend.Controllers
 {
     [Route("api/thesis")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ThesisController : ControllerBase
     {
         public ApplicationDBContext Context { get; }

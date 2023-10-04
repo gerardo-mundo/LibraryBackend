@@ -14,7 +14,7 @@ namespace LibraryBackend.Controllers
 {
     [ApiController]
     [Route("api/publications")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PublicationController : ControllerBase
     {
         private readonly IMapper mapper;
