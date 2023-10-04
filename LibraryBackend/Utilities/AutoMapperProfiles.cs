@@ -5,7 +5,6 @@ using LibraryBackend.DTO.Users;
 using LibraryBackend.DTO.Thesis;
 using LibraryBackend.Entities;
 using LibraryBackend.DTO.Loans;
-using LibraryBackend.Migrations;
 using LibraryBackend.DTO.BorrowedBooks;
 
 namespace LibraryBackend.Utilities
