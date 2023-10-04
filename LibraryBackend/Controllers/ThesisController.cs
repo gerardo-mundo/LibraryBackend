@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using LibraryBackend.context;
+using LibraryBackend.DTO;
 using LibraryBackend.DTO.Thesis;
 using LibraryBackend.Entities;
+using LibraryBackend.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -25,10 +27,14 @@ namespace LibraryBackend.Controllers
         }
         // GET: api/<ThesisController>
         [HttpGet]
-        public async Task<ActionResult<List<ThesisDTO>>> GetThesis()
+        public async Task<ActionResult<List<ThesisDTO>>> GetThesis([FromQuery] PaginationDTO paginationDTO)
         {
-           var thesis = await Context.Thesis.ToListAsync();
-           return Mapper.Map<List<ThesisDTO>>(thesis);
+
+            var queryable = Context.Thesis.AsQueryable();
+            await HttpContext.InsertParametersIntoHeader(queryable);
+
+            var thesis = await queryable.OrderBy(t => t.Year).Paginate(paginationDTO).ToListAsync();
+            return Mapper.Map<List<ThesisDTO>>(thesis);
         }
 
         [HttpGet("{id:int}", Name = "getThesisById")]

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using LibraryBackend.context;
+using LibraryBackend.DTO;
 using LibraryBackend.DTO.Publications;
 using LibraryBackend.Entities;
+using LibraryBackend.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -88,9 +90,13 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PublicationDTO>>> GetPublications()
+        public async Task<ActionResult<List<PublicationDTO>>> GetPublications([FromQuery] PaginationDTO paginationDTO)
         {
-            var publications = await context.Publications.ToListAsync();
+
+            var queryable = context.Publications.AsQueryable();
+            await HttpContext.InsertParametersIntoHeader(queryable);
+
+            var publications = await queryable.OrderBy(p => p.Year).Paginate(paginationDTO).ToListAsync();
             return mapper.Map<List<PublicationDTO>>(publications);
         }
 

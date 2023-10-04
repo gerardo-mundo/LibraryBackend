@@ -92,8 +92,13 @@ namespace LibraryBackend
             services.AddAuthorization(options => options.AddPolicy("IsAdmin", policy =>
             policy.RequireClaim("isAdmin")));
 
-            services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyMethod()
-            .WithOrigins("")));
+            services.AddCors(options => 
+            options.AddDefaultPolicy(
+                builder => builder
+            .AllowAnyMethod()
+            .WithOrigins("")
+            .WithExposedHeaders(new string[] { "totalOfRegistries" })
+            ));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

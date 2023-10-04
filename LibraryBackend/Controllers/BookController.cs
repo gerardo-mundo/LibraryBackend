@@ -7,6 +7,8 @@ using LibraryBackend.Entities;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using LibraryBackend.DTO;
+using LibraryBackend.Utilities;
 
 namespace LibraryBackend.Controllers
 {
@@ -53,9 +55,12 @@ namespace LibraryBackend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<BookDTO>>> GetBooks()
+        public async Task<ActionResult<List<BookDTO>>> GetBooks([FromQuery] PaginationDTO paginationDTO)
         {
-            var books = await Context.Books.ToListAsync();
+            var queryable = Context.Books.AsQueryable();
+            await HttpContext.InsertParametersIntoHeader(queryable);
+
+            var books = await queryable.OrderBy(x => x.LastName).Paginate(paginationDTO).ToListAsync();
             return Mapper.Map<List<BookDTO>>(books);
         }
 
