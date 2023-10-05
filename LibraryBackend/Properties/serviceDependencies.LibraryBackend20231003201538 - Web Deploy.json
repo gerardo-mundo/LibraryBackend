@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "identityapp1": {
+      "ignored": "true",
+      "type": "identityapp"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/LibraryBackend20231003201538/providers/Microsoft.ServiceLinker/linkers/defaultConnection_2B115B89E5",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/librarybackenddbserver/databases/LibraryBackend_db",
+      "type": "mssql.azure",
+      "connectionId": "defaultConnection",
+      "dynamicId": null
+    },
+    "apis1": {
+      "ignored": "true",
+      "type": "apis.azure"
+    }
+  }
+}

@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using LibraryBackend.Utilities;
 using System.IdentityModel.Tokens.Jwt;
+using LibraryBackend.Filters;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace LibraryBackend
@@ -26,16 +27,19 @@ namespace LibraryBackend
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(options =>
+            services
+            .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
+            .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            }).AddNewtonsoftJson();
+            })
+            .AddNewtonsoftJson();
 
             services.AddEndpointsApiExplorer();
 
             services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"));
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -99,6 +103,8 @@ namespace LibraryBackend
             .WithOrigins("")
             .WithExposedHeaders(new string[] { "totalOfRegistries" })
             ));
+
+            services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
