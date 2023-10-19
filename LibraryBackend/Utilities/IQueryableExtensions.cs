@@ -7,8 +7,8 @@ namespace LibraryBackend.Utilities
         public static IQueryable<T> Paginate<T>(this IQueryable<T> queryable, PaginationDTO paginationDTO)
         {
             return queryable
-                .Skip((paginationDTO.Page - 1) * paginationDTO.RecordsPeerage)
-                .Take(paginationDTO.RecordsPeerage);
+                .Skip((paginationDTO.Page - 1) * paginationDTO.RecordsPeerPage)
+                .Take(paginationDTO.RecordsPeerPage);
         }
     }
 }

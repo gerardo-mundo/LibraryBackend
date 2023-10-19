@@ -7,7 +7,7 @@
         private readonly int quantityPeerPage = 30;
 
 
-        public int RecordsPeerage
+        public int RecordsPeerPage
         {
             get { return recordsPeerPage; }
             set { recordsPeerPage = (value > quantityPeerPage) ? quantityPeerPage : value; }

@@ -39,7 +39,7 @@ namespace LibraryBackend
 
             services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"));
+                options.UseSqlServer(Configuration["defaultConnection"]);
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
