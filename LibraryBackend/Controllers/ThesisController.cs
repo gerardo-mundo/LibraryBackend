@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryBackend.context;
 using LibraryBackend.DTO;
+using LibraryBackend.DTO.Books;
 using LibraryBackend.DTO.Thesis;
 using LibraryBackend.Entities;
 using LibraryBackend.Utilities;
@@ -26,7 +27,7 @@ namespace LibraryBackend.Controllers
             Mapper = mapper;
         }
         // GET: api/<ThesisController>
-        [HttpGet]
+        [HttpGet, Route("paginated")]
         public async Task<ActionResult<List<ThesisDTO>>> GetThesis([FromQuery] PaginationDTO paginationDTO)
         {
 
@@ -34,6 +35,13 @@ namespace LibraryBackend.Controllers
             await HttpContext.InsertParametersIntoHeader(queryable);
 
             var thesis = await queryable.OrderBy(t => t.Year).Paginate(paginationDTO).ToListAsync();
+            return Mapper.Map<List<ThesisDTO>>(thesis);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<ThesisDTO>>> GetListBooks()
+        {
+            var thesis = await Context.Thesis.OrderBy(t => t.Year).ToListAsync();
             return Mapper.Map<List<ThesisDTO>>(thesis);
         }
 

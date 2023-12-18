@@ -16,40 +16,40 @@ namespace LibraryBackend.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDBContext Contex;
+        private readonly ApplicationDBContext Context;
         private readonly IMapper Mapper;
 
         public UserController(ApplicationDBContext context, IMapper mapper)
         {
-            this.Contex = context;
+            this.Context = context;
             this.Mapper = mapper;
         }
 
         [HttpGet, Route("students")]
         public async Task<ActionResult<List<StudentDTO>>> GetStudents()
         {
-            var students = await Contex.Users.Where(u => u.Type == UserTypes.Student).ToListAsync();
+            var students = await Context.Users.Where(u => u.Type == UserTypes.Student).ToListAsync();
             return Mapper.Map<List<StudentDTO>>(students);
         }
 
         [HttpGet, Route("professors")]
         public async Task<ActionResult<List<ProfessorDTO>>> GetProfessors()
         {
-            var professors = await Contex.Users.Where(u => u.Type == UserTypes.Professor).ToListAsync();
+            var professors = await Context.Users.Where(u => u.Type == UserTypes.Professor).ToListAsync();
             return Mapper.Map<List<ProfessorDTO>>(professors);
         }
 
         [HttpGet, Route("administratives")]
         public async Task<ActionResult<List<AdministrativeDTO>>> GetAdministratives()
         {
-            var administratives = await Contex.Users.Where(u => u.Type == UserTypes.Administrative).ToListAsync();
+            var administratives = await Context.Users.Where(u => u.Type == UserTypes.Administrative).ToListAsync();
             return Mapper.Map<List<AdministrativeDTO>>(administratives);
         }
 
         [HttpGet("{id:int}", Name = "getUserById")]
         public async Task<ActionResult<StudentDTO>> GetUserById(int id)
         {
-            var student = await Contex.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var student = await Context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (student == null) { return NotFound(); }
 
             return Mapper.Map<StudentDTO>(student);
@@ -58,7 +58,7 @@ namespace LibraryBackend.Controllers
         [HttpPost]
         public async Task<ActionResult> PostUser(UserCreationDTO userCreation)
         {
-            bool userExist = await Contex.Users.AnyAsync(u =>
+            bool userExist = await Context.Users.AnyAsync(u =>
                                      u.EnrollmentNum == userCreation.EnrollmentNum && u.EmployeeKey == userCreation.EmployeeKey);
 
             bool validCreadentials = userCreation.EnrollmentNum?.Length < 8
@@ -74,19 +74,19 @@ namespace LibraryBackend.Controllers
             }
 
             User user = Mapper.Map<User>(userCreation);
-            Contex.Add(user);
-            await Contex.SaveChangesAsync();
+            Context.Add(user);
+            await Context.SaveChangesAsync();
             return CreatedAtRoute("getUserById", new { id = user.Id }, user);
         }
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> PutUser(int id, UserCreationDTO userCreation)
         {
-            var user = await Contex.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await Context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user == null) { return NotFound(); }
 
             user = Mapper.Map(userCreation, user);
-            await Contex.SaveChangesAsync();
+            await Context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -94,7 +94,7 @@ namespace LibraryBackend.Controllers
         public async Task<ActionResult> PatchUser(int id, JsonPatchDocument<UserPatchDTO> patchDocument)
         {
             if (patchDocument == null) { return BadRequest(); }
-            var userDB = await Contex.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var userDB = await Context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (userDB == null) { return NotFound(nameof(userDB)); }
 
             var userDTO = Mapper.Map<UserPatchDTO>(userDB);
@@ -104,7 +104,7 @@ namespace LibraryBackend.Controllers
             if (!isValid) { return BadRequest(ModelState); }
 
             Mapper.Map(userDTO, userDB);
-            await Contex.SaveChangesAsync();
+            await Context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -112,12 +112,12 @@ namespace LibraryBackend.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
         public async Task<ActionResult> DeleteUser(int id)
         {
-            bool studentExist = await Contex.Users.AnyAsync(u => u.Id == id);
+            bool studentExist = await Context.Users.AnyAsync(u => u.Id == id);
 
             if (!studentExist) { return NotFound($"El usuario con el ID: {id} no existe"); }
 
-            Contex.Remove(new User() { Id = id });
-            await Contex.SaveChangesAsync();
+            Context.Remove(new User() { Id = id });
+            await Context.SaveChangesAsync();
             return NoContent();
         }
     }

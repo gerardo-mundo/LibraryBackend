@@ -39,7 +39,7 @@ namespace LibraryBackend
 
             services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(Configuration["defaultConnection"]);
+                options.UseSqlServer(Configuration.GetConnectionString("SQL_CONNECTIONSTRING"));
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -49,7 +49,7 @@ namespace LibraryBackend
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtkey"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT_KEY"])),
                     ClockSkew = TimeSpan.Zero
                 });
 
@@ -97,11 +97,11 @@ namespace LibraryBackend
             policy.RequireClaim("isAdmin")));
 
             services.AddCors(options => 
-            options.AddDefaultPolicy(
-                builder => builder
-            .AllowAnyMethod()
-            .WithOrigins("")
-            .WithExposedHeaders(new string[] { "totalOfRegistries" })
+                options.AddDefaultPolicy(builder => 
+                    builder
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
             ));
 
             services.AddApplicationInsightsTelemetry();
@@ -110,6 +110,8 @@ namespace LibraryBackend
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Configure the HTTP request pipeline.
+            app.UseCors();
+
             if (env.IsDevelopment())
             {
                 //app.UseSwagger();

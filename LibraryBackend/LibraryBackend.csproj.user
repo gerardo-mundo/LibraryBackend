@@ -10,6 +10,6 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_DbContextTypeFullName>LibraryBackend.context.ApplicationDBContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
-    <NameOfLastUsedPublishProfile>C:\Users\gerar\OneDrive\Escritorio\Dotnet projects\LibraryBackend\LibraryBackend\Properties\PublishProfiles\LibraryBackend - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\gerar\OneDrive\Escritorio\Dotnet projects\LibraryBackend\LibraryBackend\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

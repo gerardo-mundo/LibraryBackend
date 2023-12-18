@@ -54,10 +54,14 @@ namespace LibraryBackend.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<AuthenticationResponse>> Login(LoginCredentials loginCredentials)
+        public async Task<ActionResult<AuthenticationResponse>> Login([FromBody] LoginCredentials loginCredentials)
         {
-            var result = await SignInManager.PasswordSignInAsync(loginCredentials.Email, loginCredentials.Password,
-                isPersistent: false, lockoutOnFailure: false);
+            var result = await SignInManager.PasswordSignInAsync
+(
+                loginCredentials.Email, 
+                loginCredentials.Password,
+                isPersistent: false, 
+                lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
@@ -77,13 +81,13 @@ namespace LibraryBackend.Controllers
             var emailClaim = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "email");
             if (emailClaim == null)
             {
-                return BadRequest("No se pudo encontrar la cuenta del usuario.");
+                return BadRequest("No se encontró la cuenta del usuario.");
             }
             var email = emailClaim.Value;
             var user = await UserManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("Usuario no encontrado.");
+                return NotFound("Usuario no encontrado");
             }
 
             // Generar el hash de la nueva contraseña y actualizarla en el usuario
@@ -131,7 +135,7 @@ namespace LibraryBackend.Controllers
                 new Claim("employeeKey", userCredentials.EmployeeKey),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtkey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT_KEY"]));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddHours(8);
 
@@ -142,6 +146,7 @@ namespace LibraryBackend.Controllers
             return new AuthenticationResponse()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                Expiration = expires,
             };
         }
 
@@ -158,7 +163,7 @@ namespace LibraryBackend.Controllers
             var claimsDB = await UserManager.GetClaimsAsync(user);
             claims.AddRange(claimsDB);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtkey"]));
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT_KEY"]));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddHours(8);
 

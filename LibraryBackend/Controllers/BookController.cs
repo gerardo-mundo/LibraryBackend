@@ -54,13 +54,20 @@ namespace LibraryBackend.Controllers
             return NoContent();
         }
 
-        [HttpGet]
+        [HttpGet, Route("paginated")]
         public async Task<ActionResult<List<BookDTO>>> GetBooks([FromQuery] PaginationDTO paginationDTO)
         {
             var queryable = Context.Books.AsQueryable();
             await HttpContext.InsertParametersIntoHeader(queryable);
 
             var books = await queryable.OrderBy(x => x.LastName).Paginate(paginationDTO).ToListAsync();
+            return Mapper.Map<List<BookDTO>>(books);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<BookDTO>>> GetListBooks()
+        {
+            var books = await Context.Books.OrderBy(b => b.Adquisition).ToListAsync();
             return Mapper.Map<List<BookDTO>>(books);
         }
 

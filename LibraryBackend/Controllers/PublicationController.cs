@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryBackend.context;
 using LibraryBackend.DTO;
+using LibraryBackend.DTO.Books;
 using LibraryBackend.DTO.Publications;
 using LibraryBackend.Entities;
 using LibraryBackend.Utilities;
@@ -77,7 +78,7 @@ namespace LibraryBackend.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
         public async Task<ActionResult> DeletePublication(int id)
         {
@@ -89,7 +90,7 @@ namespace LibraryBackend.Controllers
             return NoContent();
         }
 
-        [HttpGet]
+        [HttpGet, Route("paginated")]
         public async Task<ActionResult<List<PublicationDTO>>> GetPublications([FromQuery] PaginationDTO paginationDTO)
         {
 
@@ -97,6 +98,13 @@ namespace LibraryBackend.Controllers
             await HttpContext.InsertParametersIntoHeader(queryable);
 
             var publications = await queryable.OrderBy(p => p.Year).Paginate(paginationDTO).ToListAsync();
+            return mapper.Map<List<PublicationDTO>>(publications);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<PublicationDTO>>> GetListBooks()
+        {
+            var publications = await context.Publications.OrderBy(b => b.Year).ToListAsync();
             return mapper.Map<List<PublicationDTO>>(publications);
         }
 
