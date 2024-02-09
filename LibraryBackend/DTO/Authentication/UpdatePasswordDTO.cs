@@ -5,8 +5,8 @@ namespace LibraryBackend.DTO.Authentication
     public class UpdatePasswordDTO
     {
         [Required(ErrorMessage = "La contraseña es requerida")]
-        [StringLength(10, ErrorMessage = "Debe tener entre 8 y 10 caracteres", MinimumLength = 8)]
+        [StringLength(10, ErrorMessage = "Debe tener mínimo 7 caracteres", MinimumLength = 7)]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
     }
 }

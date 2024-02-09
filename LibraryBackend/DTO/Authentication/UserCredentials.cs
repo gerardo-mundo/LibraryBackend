@@ -13,7 +13,7 @@ namespace LibraryBackend.DTO.Authentication
         public string Name { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required, MaxLength(8)]
+        [Required, MaxLength(10)]
         public string EmployeeKey { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using LibraryBackend.DTO.Thesis;
 using LibraryBackend.Entities;
 using LibraryBackend.DTO.Loans;
 using LibraryBackend.DTO.BorrowedBooks;
+using LibraryBackend.DTO.Authentication;
 
 namespace LibraryBackend.Utilities
 {
@@ -25,6 +26,7 @@ namespace LibraryBackend.Utilities
             CreateMap<User, StudentDTO>();
             CreateMap<User, ProfessorDTO>();
             CreateMap<User, AdministrativeDTO>();
+            CreateMap<User, UserDTO>();
 
             CreateMap<ThesisCreationDTO, Thesis>();
             CreateMap<Thesis, ThesisDTO>();
@@ -38,6 +40,8 @@ namespace LibraryBackend.Utilities
             CreateMap<LoanPatchDTO, Loan>().ReverseMap();
 
             CreateMap<BorrowedBooks, BorrowedBookDTO>();
+
+            CreateMap<ApplicationIdentityUser, AccountDataDTO>();
         }
 
         private List<BorrowedBooks> MapBorrowedBooks(LoanCreationDTO loanCreationDTO, Loan loan)

@@ -60,7 +60,8 @@ namespace LibraryBackend.Controllers
             var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
                 var email = emailClaim?.Value;
                 var account = await UserManager.FindByEmailAsync(email);
-                var accountId = account.Id;           
+                var accountId = account?.Id;
+                var userName = account?.UserName;
             
             var userExist = await Context.Users.AnyAsync(u => u.Id == loanCreation.UserId);
 
@@ -77,13 +78,14 @@ namespace LibraryBackend.Controllers
 
             Loan loan = Mapper.Map<Loan>(loanCreation);
             loan.AccountId = accountId;
+            loan.UserName = userName;
             Context.Add(loan);
             await Context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        [HttpPatch("id:int")]
+        [HttpPatch("{id:int}")]
         public async Task<ActionResult> PatchLoan(int id, [FromBody] JsonPatchDocument<LoanPatchDTO> patchDocument)
         {
             if(patchDocument == null) { return BadRequest("Hizo falta un elemento para actualizar"); }

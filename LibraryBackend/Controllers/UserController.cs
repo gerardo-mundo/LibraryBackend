@@ -46,6 +46,14 @@ namespace LibraryBackend.Controllers
             return Mapper.Map<List<AdministrativeDTO>>(administratives);
         }
 
+        [AllowAnonymous]
+        [HttpGet, Route("users")]
+        public async Task<ActionResult<List<UserDTO>>> GetAllUsers()
+        {
+            var users = await Context.Users.ToListAsync();
+            return Mapper.Map<List<UserDTO>>(users);
+        }
+
         [HttpGet("{id:int}", Name = "getUserById")]
         public async Task<ActionResult<StudentDTO>> GetUserById(int id)
         {

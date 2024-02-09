@@ -1,9 +1,11 @@
-﻿using LibraryBackend.DTO.Authentication;
+﻿using AutoMapper;
+using LibraryBackend.DTO.Authentication;
 using LibraryBackend.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,19 +19,25 @@ namespace LibraryBackend.Controllers
         private readonly IConfiguration Configuration;
         private readonly UserManager<ApplicationIdentityUser> UserManager;
         private readonly SignInManager<ApplicationIdentityUser> SignInManager;
+        private readonly IMapper mapper;
 
         public AccountController(IConfiguration configuration, UserManager<ApplicationIdentityUser> userManager,
-            SignInManager<ApplicationIdentityUser> signInManager)
+            SignInManager<ApplicationIdentityUser> signInManager, IMapper mapper)
         {
             this.Configuration = configuration;
             this.UserManager = userManager;
             this.SignInManager = signInManager;
+            this.mapper = mapper;
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<AuthenticationResponse>> RegisterAccount(UserCredentials userCredentials)
+        public async Task<ActionResult<AuthenticationResponse>> RegisterAccount([FromBody] UserCredentials userCredentials)
         {
+            var userExist = await UserManager.FindByEmailAsync(userCredentials.Email);
+
+            if (userExist != null) return BadRequest("El usuario ya está registrado");
+
             var user = new ApplicationIdentityUser
             {
                 UserName = userCredentials.Email,
@@ -47,8 +55,7 @@ namespace LibraryBackend.Controllers
             }
             else
             {
-                return BadRequest(result.Errors)
-;
+                return BadRequest(result.Errors);
             }
         }
 
@@ -76,7 +83,7 @@ namespace LibraryBackend.Controllers
         [HttpPatch]
         [Route("update-password")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> UpdatePassword(UpdatePasswordDTO newPassword)
+        public async Task<ActionResult> UpdatePassword([FromBody] UpdatePasswordDTO newPassword)
         {
             var emailClaim = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "email");
             if (emailClaim == null)
@@ -108,21 +115,46 @@ namespace LibraryBackend.Controllers
 
         [HttpPost]
         [Route("make-admin")]
-        public async Task<ActionResult> MakeAdmin(MakeAdminDTO makeAdminDTO)
+        public async Task<ActionResult> MakeAdmin([FromBody] MakeAdminDTO makeAdminDTO)
         {
+            if (string.IsNullOrEmpty(makeAdminDTO.Email))
+            {
+                return BadRequest("El correo electrónico no puede estar vacío");
+            }
+
             var user = await UserManager.FindByEmailAsync(makeAdminDTO.Email);
+
+            if(user == null) { return BadRequest("No se encontró al usuario"); };
+
             await UserManager.AddClaimAsync(user, new Claim("isAdmin", "true"));
-            return Ok("Se agregó cuenta de Administrador");
+            return NoContent();
         }
 
         [HttpPost]
         [Route("remove-admin")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "isAdmin")]
-        public async Task<ActionResult> RemoveAdmin(MakeAdminDTO makeAdminDTO)
+        public async Task<ActionResult> RemoveAdmin([FromBody] MakeAdminDTO makeAdminDTO)
         {
+            if (string.IsNullOrEmpty(makeAdminDTO.Email))
+            {
+                return BadRequest("El correo electrónico no puede estar vacío");
+            }
+
             var user = await UserManager.FindByEmailAsync(makeAdminDTO.Email);
+
+            if (user == null) { return BadRequest("No se encontró al usuario"); };
+
             await UserManager.RemoveClaimAsync(user, new Claim("isAdmin", "true"));
-            return Ok("Se removió el permiso de Administrador");
+            return NoContent();
+        }
+
+        [HttpGet]
+        // Deberá ir protegida
+        [Route("get-accounts")]
+        public async Task<ActionResult<List<AccountDataDTO>>> GetAccounts()
+        {
+            var accounts = await UserManager.Users.ToListAsync();
+            return mapper.Map<List<AccountDataDTO>>(accounts);
         }
 
         private AuthenticationResponse BuildToken(UserCredentials userCredentials)
@@ -137,7 +169,7 @@ namespace LibraryBackend.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT_KEY"]));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.UtcNow.AddHours(8);
+            var expires = DateTime.UtcNow.AddHours(8).ToLocalTime();
 
             var securityToken = new JwtSecurityToken(
                 issuer: null, audience: null, claims, notBefore: null,
@@ -157,6 +189,8 @@ namespace LibraryBackend.Controllers
             var claims = new List<Claim>()
             {
                 new Claim("email", user.Email),
+                new Claim("name", user.Name),
+                new Claim("lastName", user.LastName),
                 new Claim("employeeKey", user.EmployeeKey),
             };
 
