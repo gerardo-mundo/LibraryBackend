@@ -2,14 +2,11 @@ version: '3.8'
 
 services:
   librarybackend:
-    image: librarybackend
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-    volumes:
-      - .:/app
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__SQL_CONNECTIONSTRING=Server=sqlserver;Database=LibraryBackend;User Id=sa;Password=Kalif@890;

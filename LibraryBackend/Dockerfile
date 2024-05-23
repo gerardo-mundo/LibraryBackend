@@ -1,23 +1,21 @@
-# Get .NET Core SDK image for building the application
+# Usar una imagen del SDK de .NET para construir la aplicación
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
-# Copy the .csproj file and restore dependencies
+# Copiar el archivo de proyecto y restaurar las dependencias
 COPY *.csproj ./
 RUN dotnet restore
 
-# Copy the rest of the files and build the application
+# Copiar el resto de los archivos y construir la aplicación
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# Get the runtime image for running the application
+# Usar una imagen de tiempo de ejecución de .NET para ejecutar la aplicación
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Set the entry point for the application
+# Exponer el puerto en el que la aplicación escuchará
 EXPOSE 80
+# Establecer el punto de entrada para la aplicación
 ENTRYPOINT ["dotnet", "LibraryBackend.dll"]
-
-
-
