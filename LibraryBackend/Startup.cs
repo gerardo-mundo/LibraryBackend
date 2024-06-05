@@ -10,6 +10,7 @@ using System.Text;
 using LibraryBackend.Utilities;
 using System.IdentityModel.Tokens.Jwt;
 using LibraryBackend.Filters;
+using LibraryNetCoreAPI.Models;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace LibraryBackend
@@ -39,7 +40,7 @@ namespace LibraryBackend
 
             services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("SQL_CONNECTIONSTRING"));
+                options.UseSqlServer(Configuration.GetConnectionString("SQL_CONNECTIONSTRING")!);
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -49,7 +50,7 @@ namespace LibraryBackend
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT_KEY"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT_KEY"]!)),
                     ClockSkew = TimeSpan.Zero
                 });
 
@@ -117,6 +118,8 @@ namespace LibraryBackend
                 //app.UseSwagger();
                 //app.UseSwaggerUI();
             }
+
+            PrepareDB.Population(app);
 
             app.UseSwagger();
             app.UseSwaggerUI();
