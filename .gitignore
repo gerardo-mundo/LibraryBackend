@@ -204,3 +204,6 @@ coverage/
 *.cache
 *.rsuser
 *.dotSettings
+
+# Environment variables
+.env
