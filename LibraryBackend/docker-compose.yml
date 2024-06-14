@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  librarybackend:
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__SQL_CONNECTIONSTRING=${SQL_CONNECTIONSTRING}
+      - JWT_KEY=${JWT_KEY}
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    env_file: .env
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "${SA_PASSWORD}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
