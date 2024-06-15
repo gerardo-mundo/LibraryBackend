@@ -4,7 +4,7 @@ services:
   librarybackend:
     env_file: .env
     build:
-      context: .
+      context: ./LibraryBackend
       dockerfile: Dockerfile
     ports:
       - "8080:80"
@@ -28,3 +28,4 @@ services:
 
 volumes:
   sqlserverdata:
+  
