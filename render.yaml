@@ -1,0 +1,43 @@
+version: "1"
+
+services:
+  - type: web
+    runtime: docker
+    name: libraryapi
+    repo: https://github.com/gerardo-mundo/LibraryBackend
+    branch: main
+    buildCommand: dotnet build
+    startCommand: dotnet run
+    envVars:
+      - key: Database__ConnectionString
+        fromDatabase:
+          name: library_db
+          property: connectionString
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 70
+      targetCPUPercent: 70
+    healthCheckPath: /health
+
+databases:
+  - name: library_db
+    databaseName: library_db
+    user: sa
+    plan: free
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: Allow all
+    highAvailability:
+      enabled: false
+
+envVarGroups:
+  - name: common-settings
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: LOG_LEVEL
+        value: Information
+
+previewsEnabled: true
+previewsExpireAfterDays: 7
