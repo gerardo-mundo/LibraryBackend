@@ -3,15 +3,14 @@ version: "1"
 services:
   - type: web
     runtime: docker
-    name: libraryapi
-    repo: https://github.com/gerardo-mundo/LibraryBackend
+    name: library-api
+    repo: https://github.com/gerardo-mundo/LibraryBackend/tree/development
     branch: main
-    buildCommand: dotnet build
-    startCommand: dotnet run
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: Database__ConnectionString
         fromDatabase:
-          name: library_db
+          name: library-db
           property: connectionString
     scaling:
       minInstances: 1
@@ -21,7 +20,7 @@ services:
     healthCheckPath: /health
 
 databases:
-  - name: library_db
+  - name: library-db
     databaseName: library_db
     user: sa
     plan: free
@@ -30,6 +29,7 @@ databases:
         description: Allow all
     highAvailability:
       enabled: false
+    postgresMajorVersion: "13"
 
 envVarGroups:
   - name: common-settings
