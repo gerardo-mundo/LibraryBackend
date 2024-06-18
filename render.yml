@@ -10,10 +10,10 @@ services:
         value: Development
       - key: ConnectionStrings__SQL_CONNECTIONSTRING
         fromDatabase:
-          name: "${DB}"
+          name: librarydatabase
           property: connectionString
       - key: JWT_KEY
-        sync: false
+        value: ${JWT_KEY}
     healthCheckPath: /health
     plan: free
     autoDeploy: true
@@ -21,9 +21,9 @@ services:
 
 databases:
   - type: mssql
-    name: "${DB}"
+    name: ${DB}
     plan: free
     region: oregon
     user:
       name: sa
-      password: "${SA_PASSWORD}"
+      password: ${SA_PASSWORD}
