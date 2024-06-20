@@ -1,0 +1,3 @@
+build:
+  docker:
+    web: ghcr.io/gerardo-mundo/librarybackend:latest
