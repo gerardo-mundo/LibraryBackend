@@ -17,7 +17,7 @@ jobs:
       run: echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Build the Docker image
-      run: docker build -t ghcr.io/gerardo-mundo/librarybackend:latest .
+      run: docker build -t ghcr.io/gerardo-mundo/librarybackend:latest ./LibraryBackend .
 
     - name: Push the Docker image to GitHub Container Registry
       run: docker push ghcr.io/gerardo-mundo/librarybackend:latest
