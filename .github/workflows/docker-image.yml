@@ -27,5 +27,5 @@ jobs:
 
     - name: Deploy to Heroku
       run: |
-        heroku container:push web --app <library-api>
-        heroku container:release web --app <library-api>
+        heroku container:push web --app library-api
+        heroku container:release web --app library-api
