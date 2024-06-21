@@ -19,6 +19,9 @@ jobs:
     - name: Build the Docker image
       run: docker build -t ghcr.io/gerardo-mundo/librarybackend:latest -f LibraryBackend/Dockerfile ./LibraryBackend
 
+    - name: Verify Docker image
+      run: docker images
+
     - name: Push the Docker image to GitHub Container Registry
       run: docker push ghcr.io/gerardo-mundo/librarybackend:latest
 
@@ -30,5 +33,6 @@ jobs:
         HEROKU_API_KEY: ${{ secrets.API_KEY }}
       run: |
         heroku container:login
-        heroku container:push web --app ${{ secrets.HEROKU_API_NAME }}
+        docker tag ghcr.io/gerardo-mundo/librarybackend:latest registry.heroku.com/${{ secrets.HEROKU_API_NAME }}/web
+        docker push registry.heroku.com/${{ secrets.HEROKU_API_NAME }}/web
         heroku container:release web --app ${{ secrets.HEROKU_API_NAME }}
