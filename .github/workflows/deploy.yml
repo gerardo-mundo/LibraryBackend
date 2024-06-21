@@ -23,9 +23,9 @@ jobs:
       run: docker push ghcr.io/gerardo-mundo/librarybackend:latest
 
     - name: Log in to Heroku Container Registry
-      run: echo ${{ secrets.HEROKU_API_KEY }} | docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+      run: echo ${{ secrets.HEROKU_API_KEY }} | docker login --username=_ --password-stdin registry.heroku.com
 
     - name: Deploy to Heroku
       run: |
-        heroku container:push web -a $HEROKU_API_NAME
-        heroku container:release web -a $HEROKU_API_NAME
+        heroku container:push web --app ${{ secrets.HEROKU_API_NAME }}
+        heroku container:release web --app ${{ secrets.HEROKU_API_NAME }}
