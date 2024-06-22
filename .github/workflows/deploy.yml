@@ -1,4 +1,4 @@
-name: Deploy docker images from GHCR to Heroku
+name: Deploy docker image to Heroku
 
 on:
   push:
