@@ -17,34 +17,33 @@ namespace LibraryBackend
 {
     public class Startup
     {
-        public Startup(ConfigurationManager configuration)
+        public Startup(IConfiguration configuration)
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
-        public OpenApiLicense MIT { get; private set; } = null!;
 
         public void ConfigureServices(IServiceCollection services)
         {
             var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
             var connectionString = Environment.GetEnvironmentVariable("JAWSDB_URL");
 
+            Console.WriteLine($"connectionString ---->: {connectionString}")
+
             services
-            .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            })
-            .AddNewtonsoftJson();
+                .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                })
+                .AddNewtonsoftJson();
 
             services.AddEndpointsApiExplorer();
 
             services.AddDbContext<ApplicationDBContext>(options =>
-            {
-                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0)));
-            });
+                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
@@ -63,9 +62,9 @@ namespace LibraryBackend
                 {
                     Title = "Library WebApi",
                     Description = "WebApi for library management",
-                    License = MIT,
+                    License = new OpenApiLicense { Name = "MIT" },
                     Version = "v1",
-                    Contact = new OpenApiContact() { Name = "Gerardo Mundo", Email = "gerardo.perez@udgvirtual.udg.mx" }
+                    Contact = new OpenApiContact { Name = "Gerardo Mundo", Email = "gerardo.perez@udgvirtual.udg.mx" }
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -86,7 +85,7 @@ namespace LibraryBackend
                                 Id = "Bearer"
                             }
                         },
-                        new String[]{}
+                        new string[] {}
                     }
                 });
             });
@@ -98,22 +97,19 @@ namespace LibraryBackend
                 .AddDefaultTokenProviders();
 
             services.AddAuthorization(options => options.AddPolicy("IsAdmin", policy =>
-            policy.RequireClaim("isAdmin")));
+                policy.RequireClaim("isAdmin")));
 
-            services.AddCors(options => 
-                options.AddDefaultPolicy(builder => 
-                    builder
-                .WithOrigins("http://localhost:4200")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-            ));
+            services.AddCors(options =>
+                options.AddDefaultPolicy(builder =>
+                    builder.WithOrigins("http://localhost:4200")
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()));
 
             services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Configure the HTTP request pipeline.
             app.UseCors();
 
             if (env.IsDevelopment())
