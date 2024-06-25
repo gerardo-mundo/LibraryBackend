@@ -31,8 +31,6 @@ namespace LibraryBackend
             var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
             var connectionString = Environment.GetEnvironmentVariable("JAWSDB_URL");
 
-            Console.WriteLine($"connectionString ---->: {connectionString}")
-
             services
             .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
             .AddJsonOptions(options =>
@@ -109,6 +107,8 @@ namespace LibraryBackend
             ));
 
             services.AddApplicationInsightsTelemetry();
+
+            Console.WriteLine($"connectionString ---->: {connectionString}");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
