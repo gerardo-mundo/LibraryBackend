@@ -28,6 +28,9 @@ namespace LibraryBackend
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+            var connectionString = Environment.GetEnvironmentVariable("JAWSDB_URL");
+
             services
             .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
             .AddJsonOptions(options =>
@@ -40,7 +43,7 @@ namespace LibraryBackend
 
             services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("SQL_CONNECTIONSTRING")!);
+                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0)));
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -50,7 +53,7 @@ namespace LibraryBackend
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT_KEY"]!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
                     ClockSkew = TimeSpan.Zero
                 });
 
