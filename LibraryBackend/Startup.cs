@@ -17,13 +17,14 @@ namespace LibraryBackend
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(ConfigurationManager configuration)
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
+        public OpenApiLicense MIT { get; private set; } = null!;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -33,12 +34,12 @@ namespace LibraryBackend
             Console.WriteLine($"connectionString ---->: {connectionString}")
 
             services
-                .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                })
-                .AddNewtonsoftJson();
+            .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            })
+            .AddNewtonsoftJson();
 
             services.AddEndpointsApiExplorer();
 
@@ -62,9 +63,9 @@ namespace LibraryBackend
                 {
                     Title = "Library WebApi",
                     Description = "WebApi for library management",
-                    License = new OpenApiLicense { Name = "MIT" },
+                    License = MIT,
                     Version = "v1",
-                    Contact = new OpenApiContact { Name = "Gerardo Mundo", Email = "gerardo.perez@udgvirtual.udg.mx" }
+                    Contact = new OpenApiContact() { Name = "Gerardo Mundo", Email = "gerardo.perez@udgvirtual.udg.mx" }
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -85,7 +86,7 @@ namespace LibraryBackend
                                 Id = "Bearer"
                             }
                         },
-                        new string[] {}
+                        new String[]{}
                     }
                 });
             });
@@ -97,13 +98,15 @@ namespace LibraryBackend
                 .AddDefaultTokenProviders();
 
             services.AddAuthorization(options => options.AddPolicy("IsAdmin", policy =>
-                policy.RequireClaim("isAdmin")));
+            policy.RequireClaim("isAdmin")));
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
-                    builder.WithOrigins("http://localhost:4200")
-                           .AllowAnyMethod()
-                           .AllowAnyHeader()));
+                    builder
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            ));
 
             services.AddApplicationInsightsTelemetry();
         }
