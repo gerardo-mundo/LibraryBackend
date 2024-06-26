@@ -1,4 +1,5 @@
 using LibraryBackend;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,4 +17,4 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions()
 app.UseHttpsRedirection();
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3100";
-app.Run("http://*:" + port);
+app.Run($"http://*:{port}");
