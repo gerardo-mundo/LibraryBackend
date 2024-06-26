@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Pomelo.EntityFrameworkCore.MySql.Storage;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
@@ -42,7 +44,7 @@ namespace LibraryBackend
             services.AddEndpointsApiExplorer();
 
             services.AddDbContext<ApplicationDBContext>(options =>
-                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
+                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 0))));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
