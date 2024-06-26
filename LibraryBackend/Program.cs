@@ -8,4 +8,12 @@ startup.ConfigureServices(builder.Services);
 var app = builder.Build();
 startup.Configure(app, app.Environment);
 
-app.Run();
+app.UseForwardedHeaders(new ForwardedHeadersOptions()
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+});
+
+app.UseHttpsRedirection();
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "3100";
+app.Run("http://*:" + port);
