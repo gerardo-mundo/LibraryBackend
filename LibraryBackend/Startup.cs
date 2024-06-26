@@ -109,8 +109,6 @@ namespace LibraryBackend
             ));
 
             services.AddApplicationInsightsTelemetry();
-
-            Console.WriteLine($"connectionString ---->: {connectionString}");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
