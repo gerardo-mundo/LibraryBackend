@@ -32,6 +32,7 @@ namespace LibraryBackend
         {
             var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
             var connectionString = Environment.GetEnvironmentVariable("JAWSDB_URL");
+            var clientUrl = Environment.GetEnvironmentVariable("FE_URL");
 
             services
             .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
@@ -103,7 +104,7 @@ namespace LibraryBackend
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
                     builder
-                .WithOrigins("http://localhost:4200")
+                .WithOrigins(clientUrl!)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             ));
