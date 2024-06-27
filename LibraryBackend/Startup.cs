@@ -124,8 +124,8 @@ namespace LibraryBackend
 
             if (env.IsDevelopment())
             {
-                //app.UseSwagger();
-                //app.UseSwaggerUI();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             PrepareDB.Population(app);
