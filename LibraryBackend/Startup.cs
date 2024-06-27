@@ -116,6 +116,11 @@ namespace LibraryBackend
         {
             app.UseCors();
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });
+
             if (env.IsDevelopment())
             {
                 //app.UseSwagger();
