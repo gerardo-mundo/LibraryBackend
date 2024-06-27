@@ -31,9 +31,9 @@ namespace LibraryBackend
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
-            var connectionString = Environment.GetEnvironmentVariable("JAWSDB_URL");
-            var clientUrl = Environment.GetEnvironmentVariable("FE_URL");
+            var JwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+            var ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            var ClientUrl = Environment.GetEnvironmentVariable("CLIENT_URL");
 
             services
             .AddControllers(options => options.Filters.Add(typeof(FilterExceptions)))
@@ -46,7 +46,7 @@ namespace LibraryBackend
             services.AddEndpointsApiExplorer();
 
             services.AddDbContext<ApplicationDBContext>(options =>
-                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 0))));
+                options.UseMySql(ConnectionString, new MySqlServerVersion(new Version(8, 0, 0))));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
@@ -55,7 +55,7 @@ namespace LibraryBackend
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtKey!)),
                     ClockSkew = TimeSpan.Zero
                 });
 
@@ -105,7 +105,7 @@ namespace LibraryBackend
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
                     builder
-                .WithOrigins(clientUrl!)
+                .WithOrigins(ClientUrl!)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             ));
