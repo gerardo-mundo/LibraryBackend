@@ -9,9 +9,9 @@ startup.ConfigureServices(builder.Services);
 var app = builder.Build();
 startup.Configure(app, app.Environment);
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions()
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
 app.UseHttpsRedirection();
