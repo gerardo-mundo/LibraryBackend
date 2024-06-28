@@ -124,8 +124,19 @@ namespace LibraryBackend
 
             if (env.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
+
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/api/v1/swagger.json", "Library API V1");
+                    c.RoutePrefix = string.Empty;
+                });
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
             PrepareDB.Population(app);
