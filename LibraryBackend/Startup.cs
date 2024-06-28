@@ -141,9 +141,6 @@ namespace LibraryBackend
 
             PrepareDB.Population(app);
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
